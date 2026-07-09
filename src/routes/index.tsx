@@ -48,6 +48,8 @@ function HomePage() {
     <div>
       {/* HERO */}
       <section ref={heroRef} className="relative min-h-screen overflow-hidden gradient-dark">
+        {/* Warm backdrop glow — keeps the hero designed even if WebGL is unavailable */}
+        <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(ellipse_50%_60%_at_72%_45%,color-mix(in_oklab,var(--gold)_22%,transparent),transparent_70%)] md:bg-[radial-gradient(ellipse_42%_55%_at_70%_48%,color-mix(in_oklab,var(--gold)_26%,transparent),transparent_70%)]" />
         <div className="absolute inset-0">
           <Hero3D />
         </div>
