@@ -9,8 +9,32 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
+import { Route as PortofoliuRouteImport } from './routes/portofoliu'
+import { Route as DespreNoiRouteImport } from './routes/despre-noi'
+import { Route as ContactRouteImport } from './routes/contact'
 import { Route as IndexRouteImport } from './routes/index'
 
+const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
+  id: '/sitemap.xml',
+  path: '/sitemap.xml',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PortofoliuRoute = PortofoliuRouteImport.update({
+  id: '/portofoliu',
+  path: '/portofoliu',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DespreNoiRoute = DespreNoiRouteImport.update({
+  id: '/despre-noi',
+  path: '/despre-noi',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ContactRoute = ContactRouteImport.update({
+  id: '/contact',
+  path: '/contact',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -19,28 +43,78 @@ const IndexRoute = IndexRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/contact': typeof ContactRoute
+  '/despre-noi': typeof DespreNoiRoute
+  '/portofoliu': typeof PortofoliuRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/contact': typeof ContactRoute
+  '/despre-noi': typeof DespreNoiRoute
+  '/portofoliu': typeof PortofoliuRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/contact': typeof ContactRoute
+  '/despre-noi': typeof DespreNoiRoute
+  '/portofoliu': typeof PortofoliuRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths: '/' | '/contact' | '/despre-noi' | '/portofoliu' | '/sitemap.xml'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to: '/' | '/contact' | '/despre-noi' | '/portofoliu' | '/sitemap.xml'
+  id:
+    | '__root__'
+    | '/'
+    | '/contact'
+    | '/despre-noi'
+    | '/portofoliu'
+    | '/sitemap.xml'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  ContactRoute: typeof ContactRoute
+  DespreNoiRoute: typeof DespreNoiRoute
+  PortofoliuRoute: typeof PortofoliuRoute
+  SitemapDotxmlRoute: typeof SitemapDotxmlRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/sitemap.xml': {
+      id: '/sitemap.xml'
+      path: '/sitemap.xml'
+      fullPath: '/sitemap.xml'
+      preLoaderRoute: typeof SitemapDotxmlRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/portofoliu': {
+      id: '/portofoliu'
+      path: '/portofoliu'
+      fullPath: '/portofoliu'
+      preLoaderRoute: typeof PortofoliuRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/despre-noi': {
+      id: '/despre-noi'
+      path: '/despre-noi'
+      fullPath: '/despre-noi'
+      preLoaderRoute: typeof DespreNoiRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/contact': {
+      id: '/contact'
+      path: '/contact'
+      fullPath: '/contact'
+      preLoaderRoute: typeof ContactRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -53,6 +127,10 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  ContactRoute: ContactRoute,
+  DespreNoiRoute: DespreNoiRoute,
+  PortofoliuRoute: PortofoliuRoute,
+  SitemapDotxmlRoute: SitemapDotxmlRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
