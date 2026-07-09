@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { Reveal, Stagger, StaggerItem } from "../components/reveal";
 import { Counter } from "../components/counter";
+import { TiltCard } from "../components/tilt-card";
 import { Phone, MessageCircle, Mail, MapPin, Wrench, ShieldCheck, FileText } from "lucide-react";
 
 export const Route = createFileRoute("/despre-noi")({
@@ -103,13 +104,15 @@ function DesprePage() {
           <Stagger className="grid md:grid-cols-3 gap-6">
             {points.map((p) => (
               <StaggerItem key={p.t}>
-                <div className="h-full p-8 border border-border hover:border-gold transition bg-surface/40 group">
-                  <div className="h-14 w-14 grid place-items-center border border-gold text-gold mb-6 group-hover:bg-gold group-hover:text-primary-foreground transition">
-                    <p.icon className="h-6 w-6" />
+                <TiltCard className="h-full">
+                  <div className="h-full p-8 border border-border group-hover:border-gold transition bg-surface/40 overflow-hidden relative">
+                    <div className="h-14 w-14 grid place-items-center border border-gold text-gold mb-6 group-hover:bg-gold group-hover:text-primary-foreground transition">
+                      <p.icon className="h-6 w-6" />
+                    </div>
+                    <h3 className="font-serif text-2xl mb-3">{p.t}</h3>
+                    <p className="text-muted-foreground leading-relaxed">{p.d}</p>
                   </div>
-                  <h3 className="font-serif text-2xl mb-3">{p.t}</h3>
-                  <p className="text-muted-foreground leading-relaxed">{p.d}</p>
-                </div>
+                </TiltCard>
               </StaggerItem>
             ))}
           </Stagger>

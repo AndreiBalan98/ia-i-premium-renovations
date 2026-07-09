@@ -1,90 +1,134 @@
-import { Canvas, useFrame } from "@react-three/fiber";
-import { Float, Environment, MeshDistortMaterial } from "@react-three/drei";
-import { useRef, Suspense } from "react";
-import type { Mesh, Group } from "three";
+import { Canvas, useFrame, useThree } from "@react-three/fiber";
+import { Environment, Lightformer, Sparkles } from "@react-three/drei";
+import { MeshTransmissionMaterial } from "@react-three/drei";
+import { useEffect, useRef, useState, Suspense } from "react";
+import * as THREE from "three";
+import type { Group } from "three";
 
-function GoldenGeometry() {
+function ProceduralEnvironment() {
+  return (
+    <Environment resolution={128} frames={1} background={false}>
+      <Lightformer form="rect" intensity={3} color="#C9A55C" scale={[4, 2, 1]} position={[3, 2, 2]} target={[0, 0, 0]} />
+      <Lightformer form="rect" intensity={1.5} color="#ffffff" scale={[3, 3, 1]} position={[-3, 1, 2]} target={[0, 0, 0]} />
+      <Lightformer form="ring" intensity={2} color="#B08D57" scale={2.5} position={[0, -3, -2]} target={[0, 0, 0]} />
+      <Lightformer form="rect" intensity={1} color="#ffffff" scale={[5, 1, 1]} position={[0, 4, -3]} target={[0, 0, 0]} />
+    </Environment>
+  );
+}
+
+function Composition({ mobile }: { mobile: boolean }) {
   const group = useRef<Group>(null);
-  useFrame((state) => {
-    if (!group.current) return;
+  const shell = useRef<THREE.Mesh>(null);
+  const target = useRef({ x: 0, y: 0 });
+
+  useFrame((state, delta) => {
     const t = state.clock.getElapsedTime();
-    group.current.rotation.y = t * 0.15;
-    group.current.rotation.x = Math.sin(t * 0.2) * 0.1;
+    target.current.x = state.pointer.x;
+    target.current.y = state.pointer.y;
+
+    if (group.current) {
+      group.current.rotation.y = THREE.MathUtils.lerp(
+        group.current.rotation.y,
+        t * 0.12 + target.current.x * 0.35,
+        Math.min(1, delta * 2),
+      );
+      group.current.rotation.x = THREE.MathUtils.lerp(
+        group.current.rotation.x,
+        target.current.y * -0.2 + Math.sin(t * 0.15) * 0.05,
+        Math.min(1, delta * 2),
+      );
+      group.current.position.y = Math.sin(t * 0.4) * 0.12;
+    }
+    if (shell.current) {
+      shell.current.rotation.y = -t * 0.06;
+      shell.current.rotation.z = t * 0.03;
+    }
   });
 
   return (
     <group ref={group}>
-      <Float speed={1.2} rotationIntensity={0.4} floatIntensity={0.6}>
-        <mesh position={[0, 0, 0]}>
-          <icosahedronGeometry args={[1.4, 1]} />
-          <MeshDistortMaterial
-            color="#C9A55C"
-            metalness={0.95}
-            roughness={0.15}
-            distort={0.25}
-            speed={1.4}
-          />
+      {!mobile && (
+        <mesh ref={shell}>
+          <icosahedronGeometry args={[1.9, 1]} />
+          <meshBasicMaterial color="#C9A55C" wireframe transparent opacity={0.12} />
         </mesh>
-      </Float>
-      <Float speed={2} rotationIntensity={0.8} floatIntensity={1}>
-        <mesh position={[2.2, 0.8, -1]}>
-          <boxGeometry args={[0.6, 0.6, 0.6]} />
-          <meshStandardMaterial color="#B08D57" metalness={1} roughness={0.2} />
+      )}
+
+      <mesh>
+        <icosahedronGeometry args={[1.15, mobile ? 1 : 2]} />
+        <MeshTransmissionMaterial
+          samples={mobile ? 4 : 8}
+          resolution={mobile ? 256 : 512}
+          thickness={1.4}
+          roughness={0.06}
+          transmission={1}
+          ior={1.4}
+          chromaticAberration={0.04}
+          anisotropy={0.15}
+          color="#e8caa0"
+          distortion={0.15}
+          distortionScale={0.3}
+          temporalDistortion={0.1}
+        />
+      </mesh>
+
+      <mesh rotation={[Math.PI / 3, 0.4, 0]} position={[0.1, -0.1, 0.2]}>
+        <torusGeometry args={[1.7, 0.02, 16, 64]} />
+        <meshStandardMaterial color="#C9A55C" metalness={1} roughness={0.25} />
+      </mesh>
+      {!mobile && (
+        <mesh rotation={[Math.PI / 2.4, -0.6, 0.3]} position={[-0.1, 0.15, -0.1]}>
+          <torusGeometry args={[2.15, 0.015, 16, 64]} />
+          <meshStandardMaterial color="#8B7355" metalness={1} roughness={0.3} />
         </mesh>
-      </Float>
-      <Float speed={1.5} rotationIntensity={0.6} floatIntensity={0.8}>
-        <mesh position={[-2.4, -0.6, -0.5]}>
-          <octahedronGeometry args={[0.7, 0]} />
-          <meshStandardMaterial color="#8B7355" metalness={0.9} roughness={0.3} />
-        </mesh>
-      </Float>
-      <Float speed={2.5} rotationIntensity={1} floatIntensity={1.2}>
-        <mesh position={[1.8, -1.4, 1]}>
-          <torusGeometry args={[0.4, 0.15, 16, 32]} />
-          <meshStandardMaterial color="#C9A55C" metalness={1} roughness={0.1} />
-        </mesh>
-      </Float>
+      )}
+
+      {!mobile && <Sparkles count={40} scale={4} size={1.5} speed={0.25} color="#C9A55C" opacity={0.5} />}
     </group>
   );
 }
 
-function Particles() {
-  const mesh = useRef<Mesh>(null);
+function Rig({ mobile }: { mobile: boolean }) {
+  const { camera } = useThree();
   useFrame((state) => {
-    if (mesh.current) mesh.current.rotation.y = state.clock.getElapsedTime() * 0.05;
+    camera.position.x = THREE.MathUtils.lerp(camera.position.x, state.pointer.x * 0.3, 0.03);
+    camera.position.y = THREE.MathUtils.lerp(camera.position.y, state.pointer.y * 0.15, 0.03);
+    camera.lookAt(mobile ? 0 : 1.2, 0, 0);
   });
-  const count = 80;
-  const positions = new Float32Array(count * 3);
-  for (let i = 0; i < count; i++) {
-    positions[i * 3] = (Math.random() - 0.5) * 12;
-    positions[i * 3 + 1] = (Math.random() - 0.5) * 8;
-    positions[i * 3 + 2] = (Math.random() - 0.5) * 8;
-  }
-  return (
-    <points ref={mesh as never}>
-      <bufferGeometry>
-        <bufferAttribute attach="attributes-position" args={[positions, 3]} />
-      </bufferGeometry>
-      <pointsMaterial size={0.03} color="#C9A55C" transparent opacity={0.6} />
-    </points>
-  );
+  return null;
+}
+
+function useIsMobile() {
+  const [mobile, setMobile] = useState(false);
+  useEffect(() => {
+    const mq = window.matchMedia("(max-width: 768px)");
+    const update = () => setMobile(mq.matches);
+    update();
+    mq.addEventListener("change", update);
+    return () => mq.removeEventListener("change", update);
+  }, []);
+  return mobile;
 }
 
 export function Hero3D() {
+  const mobile = useIsMobile();
+
   return (
     <Canvas
-      camera={{ position: [0, 0, 5.5], fov: 45 }}
-      dpr={[1, 1.5]}
-      gl={{ antialias: true, alpha: true }}
+      camera={{ position: [1.2, 0, 6], fov: 38 }}
+      dpr={mobile ? 1 : [1, 1.75]}
+      gl={{ antialias: true, alpha: true, powerPreference: "high-performance" }}
     >
       <Suspense fallback={null}>
-        <ambientLight intensity={0.3} />
-        <directionalLight position={[5, 5, 5]} intensity={1.2} color="#C9A55C" />
-        <directionalLight position={[-5, -3, -5]} intensity={0.4} color="#ffffff" />
-        <pointLight position={[0, 0, 3]} intensity={0.8} color="#B08D57" />
-        <GoldenGeometry />
-        <Particles />
-        <Environment preset="city" />
+        <ambientLight intensity={0.35} />
+        <directionalLight position={[4, 4, 4]} intensity={1.1} color="#f2d9ae" />
+        <directionalLight position={[-4, -2, -3]} intensity={0.3} color="#ffffff" />
+        <pointLight position={[1.2, 0, 3]} intensity={0.6} color="#C9A55C" />
+        <group position={[mobile ? 0 : 1.3, 0, 0]} scale={mobile ? 0.62 : 0.92}>
+          <Composition mobile={mobile} />
+        </group>
+        <ProceduralEnvironment />
+        <Rig mobile={mobile} />
       </Suspense>
     </Canvas>
   );

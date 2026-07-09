@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { Reveal } from "../components/reveal";
+import { TiltCard } from "../components/tilt-card";
 import { LightboxGallery } from "../components/lightbox-gallery";
 import { portfolioBig } from "../lib/images";
 import { Play } from "lucide-react";
@@ -41,19 +42,21 @@ function PortofoliuPage() {
         <div className="mx-auto max-w-7xl grid md:grid-cols-3 gap-6">
           {videoThumbs.map((v, i) => (
             <Reveal key={i} delay={i * 0.1}>
-              <div className="group relative aspect-[4/5] overflow-hidden bg-surface cursor-pointer">
-                <img src={v.src} alt={v.title} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
-                <div className="absolute inset-0 bg-gradient-to-t from-background via-background/40 to-transparent" />
-                <div className="absolute inset-0 grid place-items-center">
-                  <div className="h-20 w-20 rounded-full gradient-gold grid place-items-center shadow-gold group-hover:scale-110 transition">
-                    <Play className="h-8 w-8 text-primary-foreground fill-current ml-1" />
+              <TiltCard>
+                <div className="relative aspect-[4/5] overflow-hidden bg-surface cursor-pointer">
+                  <img src={v.src} alt={v.title} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-background via-background/40 to-transparent" />
+                  <div className="absolute inset-0 grid place-items-center">
+                    <div className="h-20 w-20 rounded-full gradient-gold grid place-items-center shadow-gold group-hover:scale-110 transition">
+                      <Play className="h-8 w-8 text-primary-foreground fill-current ml-1" />
+                    </div>
+                  </div>
+                  <div className="absolute bottom-0 left-0 right-0 p-6">
+                    <div className="text-xs tracking-widest text-gold uppercase mb-2">Vizualizează Prezentarea</div>
+                    <h3 className="font-serif text-2xl">{v.title}</h3>
                   </div>
                 </div>
-                <div className="absolute bottom-0 left-0 right-0 p-6">
-                  <div className="text-xs tracking-widest text-gold uppercase mb-2">Vizualizează Prezentarea</div>
-                  <h3 className="font-serif text-2xl">{v.title}</h3>
-                </div>
-              </div>
+              </TiltCard>
             </Reveal>
           ))}
         </div>

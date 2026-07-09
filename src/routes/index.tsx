@@ -3,6 +3,7 @@ import { motion, useScroll, useTransform } from "framer-motion";
 import { useRef } from "react";
 import { Hero3D } from "../components/hero-3d";
 import { Reveal, Stagger, StaggerItem } from "../components/reveal";
+import { TiltCard } from "../components/tilt-card";
 import { LightboxGallery } from "../components/lightbox-gallery";
 import { gallerySmall, galleryLarge } from "../lib/images";
 import { Phone, Star, MessageCircle, Facebook, Instagram, ArrowRight, Sparkles, Layers, PaintBucket, Zap, MapPin, Mail } from "lucide-react";
@@ -47,13 +48,15 @@ function HomePage() {
     <div>
       {/* HERO */}
       <section ref={heroRef} className="relative min-h-screen overflow-hidden gradient-dark">
-        <div className="absolute inset-0 opacity-90">
+        <div className="absolute inset-0">
           <Hero3D />
         </div>
-        <div className="absolute inset-0 bg-gradient-to-b from-background/40 via-transparent to-background pointer-events-none" />
+        <div className="absolute inset-0 bg-gradient-to-r from-background via-background/55 to-transparent pointer-events-none" />
+        <div className="absolute inset-0 bg-gradient-to-b from-background/50 via-transparent to-background pointer-events-none" />
 
         <motion.div style={{ y, opacity }} className="relative z-10 pt-32 md:pt-40 pb-24 px-6">
           <div className="mx-auto max-w-7xl">
+            <div className="max-w-3xl">
             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }} className="flex items-center gap-3 mb-6">
               <span className="h-px w-12 bg-gold" />
               <span className="text-xs tracking-[0.3em] text-gold uppercase">Excelență în Iași</span>
@@ -104,6 +107,7 @@ function HomePage() {
             >
               Partenerul tău în Renovări Premium.
             </motion.p>
+            </div>
           </div>
         </motion.div>
 
@@ -176,14 +180,16 @@ function HomePage() {
           <Stagger className="grid md:grid-cols-2 gap-6">
             {services.map((s) => (
               <StaggerItem key={s.title}>
-                <div className="group relative h-full p-8 md:p-10 bg-background border border-border hover:border-gold/60 transition-all duration-500 hover:shadow-gold">
-                  <div className="h-14 w-14 grid place-items-center border border-gold text-gold mb-6 group-hover:bg-gold group-hover:text-primary-foreground transition-colors">
-                    <s.icon className="h-6 w-6" />
+                <TiltCard className="h-full">
+                  <div className="relative h-full p-8 md:p-10 bg-background border border-border group-hover:border-gold/60 transition-all duration-500 group-hover:shadow-gold overflow-hidden">
+                    <div className="h-14 w-14 grid place-items-center border border-gold text-gold mb-6 group-hover:bg-gold group-hover:text-primary-foreground transition-colors">
+                      <s.icon className="h-6 w-6" />
+                    </div>
+                    <h3 className="font-serif text-2xl mb-4">{s.title}</h3>
+                    <p className="text-muted-foreground leading-relaxed">{s.desc}</p>
+                    <div className="absolute bottom-0 left-0 h-px w-0 bg-gold group-hover:w-full transition-all duration-700" />
                   </div>
-                  <h3 className="font-serif text-2xl mb-4">{s.title}</h3>
-                  <p className="text-muted-foreground leading-relaxed">{s.desc}</p>
-                  <div className="absolute bottom-0 left-0 h-px w-0 bg-gold group-hover:w-full transition-all duration-700" />
-                </div>
+                </TiltCard>
               </StaggerItem>
             ))}
           </Stagger>

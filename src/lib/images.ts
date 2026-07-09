@@ -12,7 +12,7 @@ export const gallerySmall = [
   { src: u("photo-1600210492486-724fe5c67fb0"), alt: "Living amenajat modern" },
   { src: u("photo-1600607687644-c7171b42498f"), alt: "Bucătărie contemporană" },
   { src: u("photo-1616486338812-3dadae4b4ace"), alt: "Dormitor cu design curat" },
-  { src: u("photo-1600566753086-00f18fe6ba68"), alt: "Placare gresie porțelanată" },
+  { src: u("photo-1560448204-e02f11c3d0e2"), alt: "Placare gresie porțelanată" },
   { src: u("photo-1600585154526-990dced4db0d"), alt: "Detaliu finisaj marmură" },
 ];
 
@@ -36,7 +36,7 @@ export const portfolioBig = [
   "photo-1600210492486-724fe5c67fb0",
   "photo-1600607687644-c7171b42498f",
   "photo-1616486338812-3dadae4b4ace",
-  "photo-1600566753086-00f18fe6ba68",
+  "photo-1560184897-ae75f418493e",
   "photo-1600607687920-4e2a09cf159d",
   "photo-1600585154363-67eb9e2e2099",
   "photo-1616486788371-62d930495c44",
@@ -52,10 +52,10 @@ export const portfolioBig = [
   "photo-1615873968403-89e068629265",
   "photo-1600585153490-76fb20a32601",
   "photo-1600566753104-685f4f24cb4d",
-  "photo-1600607687166-48ba0b7b6b7a",
-  "photo-1600607687126-c2b7fa1b6b6d",
-  "photo-1600607687710-1c6c1e56b4c7",
-  "photo-1600566753051-6057c1c1c1c1",
-  "photo-1600210492493-0946911123c8",
+  "photo-1522708323590-d24dbb6b0267",
+  "photo-1493809842364-78817add7ffb",
+  "photo-1591088398332-8a7791972843",
+  "photo-1600047509807-ba8f99d2cdde",
+  "photo-1502672260266-1c1ef2d93688",
   "photo-1600566753376-12c8ab7fb75b",
 ].map((id, i) => ({ src: u(id, 900), alt: `Proiect renovare Iași ${i + 1}` }));

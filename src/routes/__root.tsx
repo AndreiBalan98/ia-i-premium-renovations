@@ -12,6 +12,7 @@ import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import { SiteHeader } from "../components/site-header";
 import { SiteFooter } from "../components/site-footer";
+import { CustomCursor } from "../components/custom-cursor";
 
 function NotFoundComponent() {
   return (
@@ -81,6 +82,7 @@ function RootComponent() {
   return (
     <QueryClientProvider client={queryClient}>
       <div className="min-h-screen flex flex-col">
+        <CustomCursor />
         <SiteHeader />
         <main className="flex-1">
           <Outlet />
