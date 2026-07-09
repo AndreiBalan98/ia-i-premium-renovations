@@ -124,13 +124,43 @@ function useWebGLSupport() {
   return supported;
 }
 
+// CSS-only stand-in for browsers with WebGL blocked (e.g. Brave shields):
+// a glowing core with slowly rotating gold orbit rings and twinkling dots.
+function HeroFallback() {
+  const dots = [
+    { top: "12%", left: "70%", delay: "0s" },
+    { top: "24%", left: "38%", delay: "0.7s" },
+    { top: "45%", left: "88%", delay: "1.4s" },
+    { top: "68%", left: "18%", delay: "0.3s" },
+    { top: "80%", left: "62%", delay: "1.1s" },
+    { top: "35%", left: "8%", delay: "1.8s" },
+    { top: "58%", left: "45%", delay: "0.5s" },
+    { top: "15%", left: "22%", delay: "1.6s" },
+  ];
+  return (
+    <div aria-hidden className="absolute inset-0 overflow-hidden">
+      <div className="absolute left-1/2 top-[46%] md:left-[68%] -translate-x-1/2 -translate-y-1/2 h-[24rem] w-[24rem] md:h-[36rem] md:w-[36rem] max-h-[92vw] max-w-[92vw]">
+        <div className="absolute inset-[26%] rounded-full bg-[radial-gradient(circle_at_35%_30%,#f4d9a8,#a3742f_45%,#3a2a12_75%,transparent_95%)] opacity-90 fallback-pulse" />
+        <div className="absolute inset-[10%] rounded-full border border-gold/45 [scale:1_0.42] fallback-spin" />
+        <div className="absolute inset-0 rounded-full border border-gold/25 [scale:0.42_1] fallback-spin-reverse" />
+        <div className="absolute inset-[18%] rounded-full border border-dashed border-gold/20 fallback-spin-slow" />
+        {dots.map((d, i) => (
+          <span
+            key={i}
+            className="absolute h-1 w-1 rounded-full bg-gold fallback-twinkle"
+            style={{ top: d.top, left: d.left, animationDelay: d.delay }}
+          />
+        ))}
+      </div>
+    </div>
+  );
+}
+
 export function Hero3D() {
   const mobile = useIsMobile();
   const webgl = useWebGLSupport();
 
-  // The hero section keeps a CSS gold-glow backdrop behind this canvas, so
-  // returning null (no WebGL / before mount) still leaves a designed hero.
-  if (!webgl) return null;
+  if (!webgl) return <HeroFallback />;
 
   return (
     <Canvas

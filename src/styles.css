@@ -100,6 +100,24 @@ body::after {
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
 }
 
+@keyframes fallback-spin {
+  from { rotate: 0deg; }
+  to { rotate: 360deg; }
+}
+@keyframes fallback-pulse {
+  0%, 100% { opacity: 0.9; transform: scale(1); }
+  50% { opacity: 0.65; transform: scale(0.96); }
+}
+@keyframes fallback-twinkle {
+  0%, 100% { opacity: 0.15; }
+  50% { opacity: 0.9; }
+}
+.fallback-spin { animation: fallback-spin 36s linear infinite; }
+.fallback-spin-reverse { animation: fallback-spin 48s linear infinite reverse; }
+.fallback-spin-slow { animation: fallback-spin 90s linear infinite; }
+.fallback-pulse { animation: fallback-pulse 7s ease-in-out infinite; }
+.fallback-twinkle { animation: fallback-twinkle 3.5s ease-in-out infinite; }
+
 @media (prefers-reduced-motion: reduce) {
   * {
     animation-duration: 0.001ms !important;
